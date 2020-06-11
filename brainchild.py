@@ -1,7 +1,7 @@
 # Import Libraries
 import pandas as pd 
 import psycopg2 as psy
-
+from password import password
 
 # Prompt User for information to connect with Database
 #dbIPaddress = input(f'Please enter local IP address for Database: ')
@@ -25,7 +25,7 @@ conn = psy.connect(
         host = '127.0.0.1',
         database = "testingPlayground",
         user = "postgres",
-        password = "Abednigo#1",
+        password = password,
         port = 5432
     )
 
@@ -38,11 +38,13 @@ database = pd.read_sql_query(sql, conn)
 # close DB Connection
 conn.close()
 
+database = database.astype({"invoicedate": str})
+
 def querysearch(startdate, enddate, dataframe = database):
    aquired_df = dataframe[dataframe['invoicedate'] >= startdate]
    aquired_df2 = aquired_df[aquired_df['invoicedate'] <= enddate]
    aquired_df3 = aquired_df2.groupby(['consignorid'], as_index=False)['itemcost'].sum()
-    
+   return(print(aquired_df3)) 
     
     #aquired_df4 = aquired_df2.groupby('consignorid')['rent'].avg()
     #result = pd.concat([df1, df4], axis=1).reindex(df1.index)
